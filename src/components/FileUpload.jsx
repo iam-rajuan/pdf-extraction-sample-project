@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
+import { formatFileSize } from '../utils/fileValidation';
 
-function FileUpload({ selectedFile, onFileSelect, disabled }) {
+function FileUpload({ selectedFile, onFileSelect, disabled, errorMessage = '' }) {
   const inputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -28,6 +29,7 @@ function FileUpload({ selectedFile, onFileSelect, disabled }) {
 
   const handleDragOver = (event) => {
     event.preventDefault();
+
     if (!disabled) {
       setIsDragging(true);
     }
@@ -73,8 +75,15 @@ function FileUpload({ selectedFile, onFileSelect, disabled }) {
       </button>
 
       <div className="file-meta">
-        <span className="meta-label">Selected file</span>
-        <strong>{selectedFile ? selectedFile.name : 'No file selected'}</strong>
+        <div className="meta-row">
+          <span className="meta-label">Selected file</span>
+          <strong>{selectedFile ? selectedFile.name : 'No file selected'}</strong>
+        </div>
+        <div className="meta-row">
+          <span className="meta-label">File size</span>
+          <span>{selectedFile ? formatFileSize(selectedFile.size) : 'Not available'}</span>
+        </div>
+        {errorMessage ? <div className="inline-error">{errorMessage}</div> : null}
       </div>
     </div>
   );
